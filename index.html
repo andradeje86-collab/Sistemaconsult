@@ -16,18 +16,16 @@
            getDocs, onSnapshot, query, orderBy, updateDoc, deleteDoc, serverTimestamp }
                                          from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  // ══════════════════════════════════════════════
-  // 🔧 COLE AQUI SUA CONFIGURAÇÃO DO FIREBASE
-  // Console → Configurações do projeto → Seus apps → SDK
-  // ══════════════════════════════════════════════
-  const firebaseConfig = {
-    apiKey:            "COLE_SUA_API_KEY",
-    authDomain:        "COLE_SEU_AUTH_DOMAIN",
-    projectId:         "COLE_SEU_PROJECT_ID",
-    storageBucket:     "COLE_SEU_STORAGE_BUCKET",
-    messagingSenderId: "COLE_SEU_MESSAGING_SENDER_ID",
-    appId:             "COLE_SEU_APP_ID"
-  };
+ // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBJjHvToZ_ygb4iCkJaxQROuBz7UXL1KcE",
+  authDomain: "consultmee-vendedores.firebaseapp.com",
+  projectId: "consultmee-vendedores",
+  storageBucket: "consultmee-vendedores.firebasestorage.app",
+  messagingSenderId: "281732369237",
+  appId: "1:281732369237:web:4742ff609e6824b3633ddc",
+  measurementId: "G-9TK966MRZT"
+};
 
   const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
