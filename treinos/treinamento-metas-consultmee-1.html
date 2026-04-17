@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treinamento Avançado – Bater Metas ConsultMee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green:#009952; --green-dark:#007a40; --green-light:#e8f7ef;
+    --bg:#1e2428; --card:#ffffff; --card2:#f5f9f7;
+    --text:#1a2720; --muted:#4a7060; --border:rgba(0,153,82,.2);
+    --gold:#b8860b; --silver:#607d8b; --bronze:#8d5524; --diamond:#1565c0;
+    --danger:#d32f2f;
+    --font-d:'Plus Jakarta Sans',sans-serif;
+    --font-b:'Inter',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--font-b);background:var(--bg);min-height:100vh;padding-bottom:48px;-webkit-font-smoothing:antialiased}
+
+  /* HEADER */
+  .header{background:linear-gradient(135deg,#0a1c14,#153025);padding:28px 20px 24px;position:relative;overflow:hidden}
+  .header::before{content:'';position:absolute;top:-60px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(0,153,82,.18) 0%,transparent 70%);border-radius:50%}
+  .header-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(184,134,11,.2);border:1px solid rgba(184,134,11,.4);border-radius:20px;padding:4px 12px;font-size:.72rem;color:#ffd54f;font-weight:700;margin-bottom:14px}
+  .header h1{font-family:var(--font-d);font-weight:800;font-size:1.5rem;color:#fff;line-height:1.2;margin-bottom:8px}
+  .header h1 em{color:#6dffb0;font-style:normal}
+  .header p{font-size:.85rem;color:#9ab8a8;line-height:1.5}
+  .header-meta{display:flex;gap:16px;margin-top:18px;flex-wrap:wrap}
+  .meta-pill{display:flex;align-items:center;gap:5px;font-size:.75rem;color:#9ab8a8}
+
+  /* PROGRESS */
+  .progress-section{background:#253030;padding:14px 20px;border-bottom:1px solid rgba(0,153,82,.15)}
+  .prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+  .prog-row span{font-size:.75rem;color:#9ab8a8}
+  .prog-row strong{font-size:.75rem;color:#6dffb0;font-weight:700}
+  .prog-bar{background:rgba(255,255,255,.1);border-radius:8px;height:7px;overflow:hidden}
+  .prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),#ffd54f);border-radius:8px;transition:width .6s ease}
+
+  /* CONTAINER */
+  .container{padding:18px 16px;max-width:600px;margin:0 auto}
+
+  /* SECTION TITLE */
+  .s-title{font-family:var(--font-d);font-weight:800;font-size:1rem;color:#e8f0ec;margin:22px 0 12px;display:flex;align-items:center;gap:8px}
+  .s-title::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08)}
+
+  /* ── CALCULADORA ── */
+  .calc-card{background:var(--card);border-radius:20px;overflow:hidden;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+  .calc-header{background:linear-gradient(135deg,#0d2218,#1a3828);padding:18px 18px 14px}
+  .calc-header h2{font-family:var(--font-d);font-weight:800;font-size:1.05rem;color:#fff;margin-bottom:4px}
+  .calc-header p{font-size:.75rem;color:#9ab8a8}
+  .calc-body{padding:18px}
+
+  .tipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+  .tipo-box{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:14px 12px}
+  .tipo-label{font-family:var(--font-d);font-weight:700;font-size:.82rem;color:var(--text);margin-bottom:3px}
+  .tipo-pts{font-size:.68rem;color:var(--muted);margin-bottom:10px}
+  .tipo-input-wrap{display:flex;align-items:center;gap:6px}
+  .tipo-btn{width:28px;height:28px;border-radius:8px;border:none;font-size:1rem;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    font-weight:700;flex-shrink:0;transition:.15s}
+  .tipo-btn.minus{background:#f0f4f2;color:#4a7060}
+  .tipo-btn.plus{background:#009952;color:#fff}
+  .tipo-btn:active{opacity:.7}
+  .tipo-count{flex:1;text-align:center;font-family:var(--font-d);font-weight:800;
+    font-size:1.2rem;color:var(--text);background:none;border:none;outline:none;width:100%}
+
+  /* Resultado */
+  .calc-result{background:linear-gradient(135deg,#0d2218,#1a3828);border-radius:14px;padding:18px;margin-top:4px}
+  .result-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .result-row:last-child{margin-bottom:0;padding-top:10px;border-top:1px solid rgba(255,255,255,.1)}
+  .result-lbl{font-size:.78rem;color:#9ab8a8}
+  .result-val{font-family:var(--font-d);font-weight:800;font-size:.95rem;color:#6dffb0}
+  .result-val.destaque{font-size:1.3rem;color:#ffd54f}
+  .nivel-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;
+    border-radius:20px;font-size:.75rem;font-weight:700}
+  .nivel-badge.bronze{background:rgba(141,85,36,.2);color:#cd8b5a;border:1px solid rgba(141,85,36,.3)}
+  .nivel-badge.silver{background:rgba(96,125,139,.2);color:#90a4ae;border:1px solid rgba(96,125,139,.3)}
+  .nivel-badge.gold{background:rgba(184,134,11,.2);color:#ffd54f;border:1px solid rgba(184,134,11,.3)}
+  .nivel-badge.diamond{background:rgba(21,101,192,.2);color:#82b1ff;border:1px solid rgba(21,101,192,.3)}
+
+  /* Comissão breakdown */
+  .comissao-detail{margin-top:10px;display:flex;flex-direction:column;gap:4px}
+  .cd-row{display:flex;justify-content:space-between;font-size:.72rem;color:#9ab8a8;
+    padding:5px 8px;background:rgba(255,255,255,.04);border-radius:6px}
+  .cd-row span:last-child{color:#6dffb0;font-weight:600}
+
+  /* Barra de progresso para a meta */
+  .meta-progress{margin-top:14px}
+  .meta-row{display:flex;justify-content:space-between;font-size:.72rem;color:#9ab8a8;margin-bottom:5px}
+  .meta-bar{background:rgba(255,255,255,.1);border-radius:6px;height:8px;overflow:hidden}
+  .meta-bar-fill{height:100%;border-radius:6px;transition:width .6s ease}
+
+  /* ── MÓDULO ── */
+  .modulo{background:var(--card);border-radius:18px;margin-bottom:12px;overflow:hidden;
+    box-shadow:0 2px 12px rgba(0,0,0,.12);border:1px solid var(--border)}
+  .mod-header{padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .mod-header:active{background:var(--card2)}
+  .mod-num{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;
+    justify-content:center;font-family:var(--font-d);font-weight:800;font-size:.85rem;flex-shrink:0}
+  .mod-num.p{background:#f0f4f2;color:#4a7060}
+  .mod-num.a{background:#fff8e1;color:var(--gold);border:2px solid #f0c040}
+  .mod-num.c{background:#e8f7ef;color:#007a40;border:2px solid var(--green)}
+  .mod-info{flex:1}
+  .mod-titulo{font-family:var(--font-d);font-weight:700;font-size:.9rem;color:var(--text)}
+  .mod-sub{font-size:.72rem;color:var(--muted);margin-top:2px}
+  .mod-arrow{font-size:.9rem;color:var(--muted);transition:transform .3s;flex-shrink:0}
+  .mod-arrow.open{transform:rotate(180deg)}
+  .mod-body{border-top:1px solid var(--border);display:none}
+  .mod-body.open{display:block}
+
+  /* LIÇÃO */
+  .licao{padding:14px 16px;border-bottom:1px solid rgba(0,153,82,.08);cursor:pointer;
+    display:flex;align-items:flex-start;gap:10px;-webkit-tap-highlight-color:transparent}
+  .licao:last-child{border-bottom:none}
+  .licao:active{background:var(--card2)}
+  .l-check{width:22px;height:22px;border-radius:50%;border:2px solid #d0e8e0;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:.2s;font-size:.7rem}
+  .l-check.done{background:var(--green);border-color:var(--green);color:#fff}
+  .l-content{flex:1}
+  .l-titulo{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:3px}
+  .l-desc{font-size:.74rem;color:var(--muted);line-height:1.4}
+  .l-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.6rem;font-weight:700;margin-top:5px}
+  .lb-leitura{background:#e3f2fd;color:#1565c0}
+  .lb-script{background:#f3e5f5;color:#7b1fa2}
+  .lb-pratica{background:#e8f5e9;color:#2e7d32}
+  .lb-calc{background:#fff3e0;color:#e65100}
+  .lb-check{background:#fce4ec;color:#c62828}
+
+  /* PAINEL */
+  .l-panel{display:none;padding:14px 16px 16px;background:var(--card2);border-top:1px solid rgba(0,153,82,.1)}
+  .l-panel.open{display:block}
+  .p-label{font-size:.68rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+  .p-text{font-size:.82rem;color:var(--text);line-height:1.6}
+  .p-text strong{color:var(--green-dark);font-weight:700}
+
+  /* Script box */
+  .script-box{background:#1e2428;border-radius:10px;padding:14px;border-left:3px solid var(--green);margin:8px 0}
+  .script-box p{font-size:.82rem;color:#c8e8d8;line-height:1.7;font-style:italic}
+  .sb-label{font-size:.62rem;color:#6dffb0;font-weight:700;text-transform:uppercase;margin-bottom:8px;display:block}
+
+  /* Checklist */
+  .check-list{display:flex;flex-direction:column;gap:6px}
+  .ci{display:flex;align-items:flex-start;gap:8px;font-size:.82rem;color:var(--text);
+    padding:8px 10px;background:var(--card);border-radius:8px;border:1px solid var(--border);
+    cursor:pointer;transition:.15s;-webkit-tap-highlight-color:transparent}
+  .ci:active{background:#e8f7ef}
+  .ci.checked{background:#e8f7ef;border-color:rgba(0,153,82,.3)}
+  .ci.checked .ci-box{background:var(--green);border-color:var(--green);color:#fff}
+  .ci-box{width:18px;height:18px;border-radius:4px;border:2px solid #c0d8d0;
+    display:flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0;margin-top:1px;transition:.15s}
+
+  /* Tip */
+  .tip{background:#fff8e1;border:1px solid #f0c040;border-radius:10px;padding:12px;
+    display:flex;gap:8px;align-items:flex-start;margin:8px 0}
+  .tip p{font-size:.78rem;color:#7a5c00;line-height:1.5}
+
+  /* Tabela de metas */
+  .meta-table{width:100%;border-collapse:collapse;font-size:.78rem;margin:8px 0}
+  .meta-table th{background:#e8f7ef;color:#007a40;padding:8px;text-align:left;font-weight:700}
+  .meta-table td{padding:8px;border-bottom:1px solid rgba(0,153,82,.1);color:var(--text)}
+  .meta-table tr:last-child td{border-bottom:none}
+  .meta-table tr:nth-child(even) td{background:#f5f9f7}
+  .tag-tipo{display:inline-block;padding:2px 7px;border-radius:5px;font-size:.65rem;font-weight:700}
+  .tag-pi1{background:#e3f2fd;color:#1565c0}
+  .tag-pi2{background:#f3e5f5;color:#7b1fa2}
+  .tag-pf1{background:#e8f5e9;color:#2e7d32}
+  .tag-pf2{background:#fff3e0;color:#e65100}
+
+  /* Btn concluir */
+  .btn-done{width:100%;padding:11px;background:var(--green);border:none;border-radius:10px;
+    color:#fff;font-family:var(--font-d);font-weight:700;font-size:.88rem;cursor:pointer;
+    transition:.2s;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px}
+  .btn-done:hover{background:var(--green-dark)}
+  .btn-done.done-state{background:#e8f7ef;color:#007a40;border:1px solid rgba(0,153,82,.3);cursor:default}
+
+  /* Simulador de meta */
+  .sim-card{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:16px;margin:10px 0}
+  .sim-title{font-family:var(--font-d);font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:12px}
+  .sim-select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;
+    background:var(--card);color:var(--text);font-family:var(--font-b);font-size:.85rem;
+    outline:none;margin-bottom:12px}
+  .sim-result{background:linear-gradient(135deg,#0d2218,#1a3828);border-radius:10px;padding:14px}
+  .sim-row{display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:6px}
+  .sim-row:last-child{margin-bottom:0;padding-top:8px;border-top:1px solid rgba(255,255,255,.1)}
+  .sim-row span{color:#9ab8a8}
+  .sim-row strong{color:#6dffb0;font-weight:700}
+  .sim-row.total strong{color:#ffd54f;font-size:.95rem}
+
+  /* Certificado */
+  .certificado{background:linear-gradient(135deg,#0d2218,#1a3828);border-radius:20px;
+    padding:28px 20px;text-align:center;margin-top:8px;display:none;
+    border:2px solid rgba(184,134,11,.4)}
+  .certificado.show{display:block}
+  .cert-icon{font-size:3rem;margin-bottom:12px}
+  .certificado h2{font-family:var(--font-d);font-weight:800;font-size:1.3rem;color:#fff;margin-bottom:8px}
+  .certificado p{font-size:.85rem;color:#9ab8a8;line-height:1.5;margin-bottom:16px}
+  .cert-badge{display:inline-block;background:rgba(184,134,11,.2);border:2px solid #ffd54f;
+    border-radius:12px;padding:10px 20px;font-family:var(--font-d);font-weight:800;font-size:.9rem;color:#ffd54f}
+  .btn-share{margin-top:14px;padding:12px;background:var(--green);border:none;border-radius:10px;
+    color:#fff;font-family:var(--font-d);font-weight:700;font-size:.85rem;cursor:pointer;width:100%}
+
+  /* TOAST */
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+    background:#1a3828;color:#6dffb0;border:1px solid rgba(0,153,82,.4);
+    padding:10px 20px;border-radius:10px;font-size:.82rem;font-weight:600;
+    opacity:0;pointer-events:none;transition:opacity .3s;z-index:999;white-space:nowrap}
+  #toast.show{opacity:1}
+
+  input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-badge">⭐ Nível Avançado</div>
+  <h1>Como <em>Bater Metas</em> Todo Mês</h1>
+  <p>Estratégias, cálculos reais e planos de ação para cada nível — do Bronze ao Diamond.</p>
+  <div class="header-meta">
+    <div class="meta-pill"><span>⏱</span> 40 min</div>
+    <div class="meta-pill"><span>📊</span> 5 módulos</div>
+    <div class="meta-pill"><span>🧮</span> Calculadora interativa</div>
+  </div>
+</div>
+
+<!-- PROGRESSO -->
+<div class="progress-section">
+  <div class="prog-row"><span>Seu progresso</span><strong id="pctLabel">0%</strong></div>
+  <div class="prog-bar"><div class="prog-fill" id="progGeral" style="width:0%"></div></div>
+</div>
+
+<div class="container">
+
+<!-- ══════════════════════════════
+     CALCULADORA DE GANHOS
+══════════════════════════════ -->
+<div class="s-title">🧮 Calculadora de Ganhos</div>
+
+<div class="calc-card">
+  <div class="calc-header">
+    <h2>Simule seus ganhos do mês</h2>
+    <p>Informe quantas vendas de cada tipo você quer fazer</p>
+  </div>
+  <div class="calc-body">
+
+    <div class="tipo-grid">
+      <!-- PI.1 -->
+      <div class="tipo-box">
+        <div class="tipo-label">Pi.1</div>
+        <div class="tipo-pts">Individual básico · 1 ponto</div>
+        <div class="tipo-input-wrap">
+          <button class="tipo-btn minus" onclick="adj('pi1',-1)">−</button>
+          <input class="tipo-count" type="number" id="inp-pi1" value="0" min="0" oninput="calcular()">
+          <button class="tipo-btn plus" onclick="adj('pi1',1)">+</button>
+        </div>
+      </div>
+      <!-- PI.2 -->
+      <div class="tipo-box">
+        <div class="tipo-label">Pi.2</div>
+        <div class="tipo-pts">Individual completo · 2 pontos</div>
+        <div class="tipo-input-wrap">
+          <button class="tipo-btn minus" onclick="adj('pi2',-1)">−</button>
+          <input class="tipo-count" type="number" id="inp-pi2" value="0" min="0" oninput="calcular()">
+          <button class="tipo-btn plus" onclick="adj('pi2',1)">+</button>
+        </div>
+      </div>
+      <!-- PF.1 -->
+      <div class="tipo-box">
+        <div class="tipo-label">PF.1</div>
+        <div class="tipo-pts">Família básico · 4 pontos</div>
+        <div class="tipo-input-wrap">
+          <button class="tipo-btn minus" onclick="adj('pf1',-1)">−</button>
+          <input class="tipo-count" type="number" id="inp-pf1" value="0" min="0" oninput="calcular()">
+          <button class="tipo-btn plus" onclick="adj('pf1',1)">+</button>
+        </div>
+      </div>
+      <!-- PF.2 -->
+      <div class="tipo-box">
+        <div class="tipo-label">PF.2</div>
+        <div class="tipo-pts">Família completo · 6 pontos</div>
+        <div class="tipo-input-wrap">
+          <button class="tipo-btn minus" onclick="adj('pf2',-1)">−</button>
+          <input class="tipo-count" type="number" id="inp-pf2" value="0" min="0" oninput="calcular()">
+          <button class="tipo-btn plus" onclick="adj('pf2',1)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTADO -->
+    <div class="calc-result">
+      <div class="result-row">
+        <span class="result-lbl">Total de planos</span>
+        <span class="result-val" id="r-planos">0 planos</span>
+      </div>
+      <div class="result-row">
+        <span class="result-lbl">Pontos acumulados</span>
+        <span class="result-val" id="r-pontos">0 pts</span>
+      </div>
+      <div class="result-row">
+        <span class="result-lbl">Seu nível</span>
+        <span id="r-nivel"><span class="nivel-badge bronze">🥉 Bronze</span></span>
+      </div>
+
+      <!-- Breakdown de comissão -->
+      <div class="comissao-detail" id="r-detail"></div>
+
+      <!-- Meta progress -->
+      <div class="meta-progress" id="r-meta-wrap">
+        <div class="meta-row">
+          <span id="r-meta-lbl">Progresso para Silver</span>
+          <span id="r-meta-pct" style="color:#6dffb0;font-weight:700">0%</span>
+        </div>
+        <div class="meta-bar">
+          <div class="meta-bar-fill" id="r-meta-fill" style="width:0%;background:#6dffb0"></div>
+        </div>
+      </div>
+
+      <div class="result-row" style="margin-top:10px">
+        <span class="result-lbl">💰 Comissão estimada</span>
+        <span class="result-val destaque" id="r-comissao">R$ 0,00</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     MÓDULO 1
+══════════════════════════════ -->
+<div class="s-title">📚 Módulos de Treinamento</div>
+
+<div class="modulo">
+  <div class="mod-header" onclick="toggleMod(1)">
+    <div class="mod-num p" id="mn-1">1</div>
+    <div class="mod-info">
+      <div class="mod-titulo">📊 Entendendo a Tabela de Comissões</div>
+      <div class="mod-sub">Como funciona cada tipo de plano e quanto você ganha</div>
+    </div>
+    <div class="mod-arrow" id="ma-1">▼</div>
+  </div>
+  <div class="mod-body" id="mb-1">
+
+    <div class="licao" onclick="toggleLicao('1-1')">
+      <div class="l-check" id="lc-1-1">✓</div>
+      <div class="l-content">
+        <div class="l-titulo">A tabela completa de comissões</div>
+        <div class="l-desc">Quanto você recebe por tipo de plano e faixa de vendas</div>
+        <span class="l-badge lb-leitura">📖 Leitura</span>
+      </div>
+    </div>
+    <div class="l-panel" id="lp-1-1">
+      <div class="p-label">Tabela Oficial de Comissões</div>
+      <table class="meta-table">
+        <thead><tr><th>Tipo</th><th>Valor</th><th>Comissão/venda</th><th>Bônus 10</th><th>Bônus 20</th><th>Bônus 30+</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag-tipo tag-pi1">Pi.1</span></td><td>R$14,90</td><td>R$1,49</td><td>+R$15</td><td>+R$20</td><td>+R$25</td></tr>
+          <tr><td><span class="tag-tipo tag-pi2">Pi.2</span></td><td>R$24,90</td><td>R$2,49</td><td>+R$25</td><td>+R$35</td><td>+R$45</td></tr>
+          <tr><td><span class="tag-tipo tag-pf1">PF.1</span></td><td>R$29,90</td><td>R$2,99</td><td>+R$50</td><td>+R$60</td><td>+R$80</td></tr>
+          <tr><td><span class="tag-tipo tag-pf2">PF.2</span></td><td>R$59,90</td><td>R$5,99</td><td>+R$80</td><td>+R$90</td><td>+R$150</td></tr>
+        </tbody>
+      </table>
+      <div class="tip">
+        <div>💡</div>
+        <p>Você ganha <strong>10% do valor do plano por venda</strong> + um <strong>bônus fixo</strong> ao bater 10, 20 ou 30 planos do mesmo tipo.<br><br>
+        Exemplo Pi.1: 10 vendas = (10 × R$1,49) + R$15 bônus = <strong>R$29,90</strong>.<br>
+        Exemplo PF.2: 10 vendas = (10 × R$5,99) + R$80 bônus = <strong>R$139,90</strong>.</p>
+      </div>
+      <div class="p-label" style="margin-top:12px">Pagamento</div>
+      <div class="p-text">A comissão é <strong>liberada após o dia 20 do mês subsequente</strong>. Ou seja, vendas de Janeiro são pagas após dia 20 de Fevereiro.</div>
+      <button class="btn-done" id="bd-1-1" onclick="concluir('1-1')">✓ Entendi a tabela!</button>
+    </div>
+
+    <div class="licao" onclick="toggleLicao('1-2')">
+      <div class="l-check" id="lc-1-2">✓</div>
+      <div class="l-content">
+        <div class="l-titulo">Por que focar em PF.2 muda tudo</div>
+        <div class="l-desc">O tipo de venda que multiplica seus ganhos mais rápido</div>
+        <span class="l-badge lb-calc">🧮 Cálculo</span>
+      </div>
+    </div>
+    <div class="l-panel" id="lp-1-2">
+      <div class="p-label">Comparativo Real</div>
+      <div class="p-text">Imagine que você vai vender <strong>10 planos no mês</strong>. Veja a diferença:</div>
+      <table class="meta-table" style="margin-top:8px">
+        <thead><tr><th>Estratégia</th><th>Pontos</th><th>Comissão 10%</th><th>+ Bônus</th><th>Total</th></tr></thead>
+        <tbody>
+          <tr><td>10 × Pi.1</td><td>10 pts</td><td>R$14,90</td><td>+R$15</td><td>R$29,90</td></tr>
+          <tr><td>10 × Pi.2</td><td>20 pts</td><td>R$24,90</td><td>+R$25</td><td>R$49,90</td></tr>
+          <tr><td>10 × PF.1</td><td>40 pts</td><td>R$29,90</td><td>+R$50</td><td>R$79,90</td></tr>
+          <tr><td><strong>10 × PF.2</strong></td><td><strong>60 pts</strong></td><td>R$59,90</td><td>+R$80</td><td><strong>R$139,90</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="tip" style="margin-top:10px">
+        <div>🎯</div>
+        <p>Com <strong>10 vendas PF.2</strong> você já atinge <strong>60 pontos (Silver)</strong> e recebe R$139,90. O bônus só cai ao bater a faixa — então <strong>9 vendas PF.2 = R$53,91 sem bônus</strong>. Vale muito a pena fechar a décima!</p>
+      </div>
+      <button class="btn-done" id="bd-1-2" onclick="concluir('1-2')">✓ Foco no PF.2!</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- MÓDULO 2 -->
+<div class="modulo">
+  <div class="mod-header" onclick="toggleMod(2)">
+    <div class="mod-num p" id="mn-2">2</div>
+    <div class="mod-info">
+      <div class="mod-titulo">🗓️ Planejamento Mensal por Nível</div>
+      <div class="mod-sub">Plano de ação específico para sair do Bronze ao Diamond</div>
+    </div>
+    <div class="mod-arrow" id="ma-2">▼</div>
+  </div>
+  <div class="mod-body" id="mb-2">
+
+    <div class="licao" onclick="toggleLicao('2-1')">
+      <div class="l-check" id="lc-2-1">✓</div>
+      <div class="l-content">
+        <div class="l-titulo">Plano Bronze → Silver (0 a 41 pontos)</div>
+        <div class="l-desc">Como sair do zero e bater a primeira meta em 30 dias</div>
+        <span class="l-badge lb-pratica">✅ Plano de ação</span>
+      </div>
+    </div>
+    <div class="l-panel" id="lp-2-1">
+      <div class="p-label">Meta mínima para Silver: 41 pontos</div>
+      <div class="p-text">O caminho mais rápido: <strong>7 vendas PF.2</strong> = 42 pontos = Silver ✅</div>
+      <div class="check-list" style="margin-top:10px">
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div><div><strong>Semana 1:</strong> Liste 50 contatos no WhatsApp. Filtre quem tem filhos ou é autônomo (maior chance de fechar PF).</div></div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div><div><strong>Semana 1:</strong> Aborde 15 contatos com o script de abertura. Meta: 2 fechamentos.</div></div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div><div><strong>Semana 2:</strong> Poste stories diários. Aborde mais 15 contatos. Meta: 2 fechamentos.</div></div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div><div><strong>Semana 3:</strong> Peça indicação dos 4 clientes fechados. Aborde os indicados. Meta: 2 fechamentos.</div></div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div><div><strong>Semana 4:</strong> Reaborde quem disse "depois". 1 fechamento faltante = Silver garantido.</div></div>
+      </div>
+      <div class="sim-card">
+        <div class="sim-title">🧮 Simulação Bronze → Silver</div>
+        <table class="meta-table">
+          <thead><tr><th>Vendas</th><th>Tipo</th><th>Pontos</th><th>Comissão</th></tr></thead>
+          <tbody>
+            <tr><td>7</td><td><span class="tag-tipo tag-pf2">PF.2</span></td><td>42 pts</td><td>R$ 560</td></tr>
+            <tr><td>5</td><td><span class="tag-tipo tag-pf1">PF.1</span></td><td>20 pts + 42 = 62</td><td>+ R$ 250</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn-done" id="bd-2-1" onclick="concluir('2-1')">✓ Plano Bronze anotado!</button>
+    </div>
+
+    <div class="licao" onclick="toggleLicao('2-2')">
+      <div class="l-check" id="lc-2-2">✓</div>
+      <div class="l-content">
+        <div class="l-titulo">Plano Silver → Gold (41 a 121 pontos)</div>
+        <div class="l-desc">Dobrar a produção com estratégia, não com esforço dobrado</div>
+        <span class="l-badge lb-pratica">✅ Plano de ação</span>
+      </div>
+    </div>
+    <div class="l-panel" id="lp-2-2">
+      <div class="p-label">Meta mínima para Gold: 121 pontos</div>
+      <div class="p-text">Estratégia recomendada: <strong>mix de PF.2 + PF.1</strong> para atingir 121 pontos com ~20 vendas.</div>
+      <div class="check-list" style="margin-top:10px">
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Crie um <strong>grupo de clientes</strong> no WhatsApp. Peça 1 indicação de cada cliente por mês.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Prospete <strong>2 empresas pequenas</strong> para planos corporativos (PF valem mais pontos).</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Meta diária: <strong>3 contatos novos por dia</strong> = 90 contatos no mês.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Use os <strong>conteúdos da plataforma</strong> para postar todos os dias. Gera leads passivos.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Acompanhe seus pontos semanalmente. Se estiver atrás, intensifique na semana 3.</div>
+      </div>
+      <div class="sim-card">
+        <div class="sim-title">🧮 Simulação Silver → Gold</div>
+        <table class="meta-table">
+          <thead><tr><th>Vendas</th><th>Tipo</th><th>Pontos</th><th>Comissão</th></tr></thead>
+          <tbody>
+            <tr><td>15</td><td><span class="tag-tipo tag-pf2">PF.2</span></td><td>90 pts</td><td>R$1.350</td></tr>
+            <tr><td>8</td><td><span class="tag-tipo tag-pf1">PF.1</span></td><td>32 pts</td><td>R$ 480</td></tr>
+            <tr><td colspan="2"><strong>Total: 23 vendas</strong></td><td><strong>122 pts ✅</strong></td><td><strong>R$1.830</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn-done" id="bd-2-2" onclick="concluir('2-2')">✓ Plano Silver anotado!</button>
+    </div>
+
+    <div class="licao" onclick="toggleLicao('2-3')">
+      <div class="l-check" id="lc-2-3">✓</div>
+      <div class="l-content">
+        <div class="l-titulo">Plano Gold → Diamond (121 a 300+ pontos)</div>
+        <div class="l-desc">O nível dos profissionais — requer sistema, não só esforço</div>
+        <span class="l-badge lb-pratica">✅ Plano de ação</span>
+      </div>
+    </div>
+    <div class="l-panel" id="lp-2-3">
+      <div class="p-label">Meta Diamond: 300+ pontos</div>
+      <div class="p-text">Em Diamond, a maior comissão entra. <strong>50 vendas PF.2</strong> = 300 pontos e <strong>R$ 7.500/mês</strong>.</div>
+      <div class="check-list" style="margin-top:10px">
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div><strong>Monte uma rede:</strong> treine 3 indicadores que te trazem leads qualificados.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div><strong>Parceria B2B:</strong> feche 1 empresa com 10+ colaboradores por mês.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div><strong>Sistema de follow-up:</strong> use planilha ou app para nunca perder um lead.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div><strong>Meta diária:</strong> 5 contatos novos + 3 follow-ups de leads quentes.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div><strong>Lives mensais:</strong> 1 live de 15 min sobre saúde = dezenas de leads orgânicos.</div>
+      </div>
+      <div class="sim-card">
+        <div class="sim-title">🧮 Simulação Gold → Diamond</div>
+        <table class="meta-table">
+          <thead><tr><th>Vendas</th><th>Tipo</th><th>Pontos</th><th>Comissão</th></tr></thead>
+          <tbody>
+            <tr><td>30</td><td><span class="tag-tipo tag-pf2">PF.2</span></td><td>180 pts</td><td>R$4.500</td></tr>
+            <tr><td>15</td><td><span class="tag-tipo tag-pf1">PF.1</span></td><td>60 pts</td><td>R$1.200</td></tr>
+            <tr><td>15</td><td><span class="tag-tipo tag-pi2">Pi.2</span></td><td>30 pts</td><td>R$ 675</td></tr>
+            <tr><td colspan="2"><strong>Total: 60 vendas</strong></td><td><strong>270 pts</strong></td><td><strong>R$6.375</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn-done" id="bd-2-3" onclick="concluir('2-3')">✓ Plano Diamond anotado!</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- MÓDULO 3 -->
+<div class="modulo">
+  <div class="mod-header" onclick="toggleMod(3)">
+    <div class="mod-num p" id="mn-3">3</div>
+    <div class="mod-info">
+      <div class="mod-titulo">⚡ Estratégias para Acelerar Pontos</div>
+      <div class="mod-sub">Como acumular pontos mais rápido sem trabalhar mais horas</div>
+    </div>
+    <div class="mod-arrow" id="ma-3">▼</div>
+  </div>
+  <div class="mod-body" id="mb-3">
+
+    <div class="licao" onclick="toggleLicao('3-1')">
+      <div class="l-check" id="lc-3-1">✓</div>
+      <div class="l-content">
+        <div class="l-titulo">A regra do upgrade: converta Pi em PF</div>
+        <div class="l-desc">Como transformar clientes individuais em planos família</div>
+        <span class="l-badge lb-script">💬 Script</span>
+      </div>
+    </div>
+    <div class="l-panel" id="lp-3-1">
+      <div class="p-label">O Upgrade Vale Muito</div>
+      <div class="p-text">Um cliente Pi.1 que vira PF.2 aumenta sua comissão em <strong>10x</strong> e seus pontos em <strong>6x</strong>. Sempre ofereça o upgrade.</div>
+      <div class="script-box">
+        <span class="sb-label">💬 Script de upgrade</span>
+        <p>"[Nome], você já está protegido com o plano individual. Mas lembrei que você tem [filho/esposa/parceiro]. Sabia que incluir toda a família sai mais barato por pessoa do que manter planos separados? Posso te mostrar os números?"</p>
+      </div>
+      <div class="tip">
+        <div>🎯</div>
+        <p>Aborde <strong>todos os clientes Pi.1 e Pi.2</strong> com essa mensagem 30 dias após a assinatura. Taxa de upgrade costuma ser de 30–40%.</p>
+      </div>
+      <button class="btn-done" id="bd-3-1" onclick="concluir('3-1')">✓ Script de upgrade anotado!</button>
+    </div>
+
+    <div class="licao" onclick="toggleLicao('3-2')">
+      <div class="l-check" id="lc-3-2">✓</div>
+      <div class="l-content">
+        <div class="l-titulo">Semana de aceleração: como recuperar pontos perdidos</div>
+        <div class="l-desc">O que fazer quando você está atrás da meta no dia 20</div>
+        <span class="l-badge lb-pratica">✅ Prática</span>
+      </div>
+    </div>
+    <div class="l-panel" id="lp-3-2">
+      <div class="p-label">Protocolo de Recuperação — Dias 20 a 30</div>
+      <div class="check-list">
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Liste todos os leads que disseram "talvez" ou "semana que vem" no mês.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Mande mensagem personalizada com senso de urgência real ("último dia do mês").</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Ofereça ajuda no cadastro na hora — remova qualquer fricção.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Peça indicação urgente para seus melhores clientes. Ofereça algo em troca.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Foque exclusivamente em PF.2 nesses dias — máximo de pontos por venda.</div>
+      </div>
+      <button class="btn-done" id="bd-3-2" onclick="concluir('3-2')">✓ Protocolo de recuperação salvo!</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- MÓDULO 4 -->
+<div class="modulo">
+  <div class="mod-header" onclick="toggleMod(4)">
+    <div class="mod-num p" id="mn-4">4</div>
+    <div class="mod-info">
+      <div class="mod-titulo">📅 Controle Semanal de Metas</div>
+      <div class="mod-sub">Como monitorar seu progresso e nunca ser pego de surpresa</div>
+    </div>
+    <div class="mod-arrow" id="ma-4">▼</div>
+  </div>
+  <div class="mod-body" id="mb-4">
+
+    <div class="licao" onclick="toggleLicao('4-1')">
+      <div class="l-check" id="lc-4-1">✓</div>
+      <div class="l-content">
+        <div class="l-titulo">O checklist semanal do vendedor de alta performance</div>
+        <div class="l-desc">O que revisar toda segunda-feira para garantir a meta</div>
+        <span class="l-badge lb-check">📋 Checklist</span>
+      </div>
+    </div>
+    <div class="l-panel" id="lp-4-1">
+      <div class="p-label">Revisão Semanal — Toda Segunda-feira</div>
+      <div class="check-list">
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Verifique seus pontos atuais no portal ConsultMee.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Calcule quantos pontos faltam para sua meta do mês.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Divida os pontos restantes pelas semanas que faltam.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Defina quantas vendas de qual tipo você precisa fazer essa semana.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Liste 10 contatos para abordar durante a semana.</div>
+        <div class="ci" onclick="toggleCI(this)"><div class="ci-box">✓</div>Programe os posts de stories da semana usando os conteúdos da plataforma.</div>
+      </div>
+      <div class="tip" style="margin-top:10px">
+        <div>📊</div>
+        <p>Use a <strong>Calculadora</strong> no topo desta página toda semana para simular se sua cadência atual vai bater a meta.</p>
+      </div>
+      <button class="btn-done" id="bd-4-1" onclick="concluir('4-1')">✓ Revisão semanal programada!</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- MÓDULO 5 -->
+<div class="modulo">
+  <div class="mod-header" onclick="toggleMod(5)">
+    <div class="mod-num p" id="mn-5">5</div>
+    <div class="mod-info">
+      <div class="mod-titulo">🧠 Mentalidade de Alta Performance</div>
+      <div class="mod-sub">O que separa quem bate meta de quem quase bate</div>
+    </div>
+    <div class="mod-arrow" id="ma-5">▼</div>
+  </div>
+  <div class="mod-body" id="mb-5">
+
+    <div class="licao" onclick="toggleLicao('5-1')">
+      <div class="l-check" id="lc-5-1">✓</div>
+      <div class="l-content">
+        <div class="l-titulo">Os 3 hábitos dos top vendedores ConsultMee</div>
+        <div class="l-desc">Simples, comprovados, transformadores</div>
+        <span class="l-badge lb-leitura">📖 Leitura</span>
+      </div>
+    </div>
+    <div class="l-panel" id="lp-5-1">
+      <div class="p-label">Hábito 1 — Registre tudo</div>
+      <div class="p-text">Quem não mede, não melhora. Anote diariamente: contatos feitos, respostas recebidas, propostas enviadas, fechamentos. Em 1 mês você vai saber sua taxa de conversão e poderá calcular exatamente quantos contatos precisa para bater qualquer meta.</div>
+      <div class="p-label" style="margin-top:12px">Hábito 2 — Nunca pare de prospectar</div>
+      <div class="p-text">Mesmo quando você já bateu a meta, continue prospectando. O pipeline de hoje é a meta do mês que vem. Quem para de prospectar ao bater a meta começa o próximo mês do zero.</div>
+      <div class="p-label" style="margin-top:12px">Hábito 3 — Cuide dos clientes ativos</div>
+      <div class="p-text">Cliente satisfeito <strong>renova e indica</strong>. Um "como você está usando o plano?" por mês para cada cliente gera renovações e indicações que valem mais do que qualquer prospecção fria.</div>
+      <div class="tip" style="margin-top:10px">
+        <div>🏆</div>
+        <p>Os vendedores Diamond da ConsultMee não trabalham mais horas — eles trabalham com <strong>sistema</strong>. Prospecção constante + upgrade + indicação = crescimento composto.</p>
+      </div>
+      <button class="btn-done" id="bd-5-1" onclick="concluir('5-1')">✓ Hábitos internalizados!</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- CERTIFICADO -->
+<div class="certificado" id="cert">
+  <div class="cert-icon">🏅</div>
+  <h2>Treinamento Avançado Concluído!</h2>
+  <p>Você domina as estratégias para bater metas todo mês. Agora é hora de aplicar. Boa sorte e boas vendas!</p>
+  <div class="cert-badge">⭐ Certificado Nível Avançado</div><br>
+  <button class="btn-share" onclick="compartilhar()">📲 Compartilhar conquista</button>
+</div>
+
+</div><!-- /container -->
+<div id="toast"></div>
+
+<script>
+// ══ ESTADO ══
+const KEY = 'consultmee_adv_training_v1';
+const TOTAL = 10;
+let state = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } })();
+
+// ══ CALCULADORA ══
+// Comissão = 10% do valor do plano por venda
+// Bônus = valor fixo ao atingir 10, 20 ou 30+ vendas DO MESMO TIPO
+const VALOR_PLANO = { pi1:14.90, pi2:24.90, pf1:29.90, pf2:59.90 };
+const COMISSAO_PCT = 0.10; // 10% por venda
+
+// Bônus por tipo ao bater faixas (independente por tipo)
+const BONUS = {
+  pi1: { 10:15, 20:20, 30:25 },
+  pi2: { 10:25, 20:35, 30:45 },
+  pf1: { 10:50, 20:60, 30:80 },
+  pf2: { 10:80, 20:90, 30:150 }
+};
+const NOMES = { pi1:'Pi.1', pi2:'Pi.2', pf1:'PF.1', pf2:'PF.2' };
+
+function getBonus(tipo, qtd) {
+  if (qtd >= 30) return BONUS[tipo][30];
+  if (qtd >= 20) return BONUS[tipo][20];
+  if (qtd >= 10) return BONUS[tipo][10];
+  return 0;
+}
+
+function fmt(v) { return 'R$ ' + v.toFixed(2).replace('.',','); }
+
+function calcular() {
+  const vals = {
+    pi1: Math.max(0, parseInt(document.getElementById('inp-pi1').value)||0),
+    pi2: Math.max(0, parseInt(document.getElementById('inp-pi2').value)||0),
+    pf1: Math.max(0, parseInt(document.getElementById('inp-pf1').value)||0),
+    pf2: Math.max(0, parseInt(document.getElementById('inp-pf2').value)||0),
+  };
+
+  const totalPlanos = vals.pi1 + vals.pi2 + vals.pf1 + vals.pf2;
+  const totalPontos = vals.pi1*1 + vals.pi2*2 + vals.pf1*4 + vals.pf2*6;
+
+  // Comissão + bônus por tipo (calculados individualmente)
+  let totalComissao = 0;
+  let totalBonus = 0;
+  let detailHTML = '';
+
+  ['pi1','pi2','pf1','pf2'].forEach(t => {
+    if (vals[t] > 0) {
+      const comissaoTipo = VALOR_PLANO[t] * COMISSAO_PCT * vals[t];
+      const bonusTipo    = getBonus(t, vals[t]);
+      const subtotal     = comissaoTipo + bonusTipo;
+      totalComissao += comissaoTipo;
+      totalBonus    += bonusTipo;
+
+      let linha = `<div class="cd-row">
+        <span>${NOMES[t]} × ${vals[t]} (10% × ${fmt(VALOR_PLANO[t])})</span>
+        <span>${fmt(comissaoTipo)}</span>
+      </div>`;
+      if (bonusTipo > 0) {
+        linha += `<div class="cd-row" style="color:#ffd54f">
+          <span>🎁 Bônus ${NOMES[t]} (${vals[t]}+ planos)</span>
+          <span>+ ${fmt(bonusTipo)}</span>
+        </div>`;
+      }
+      detailHTML += linha;
+    }
+  });
+
+  if (totalBonus > 0) {
+    detailHTML += `<div class="cd-row" style="border-top:1px solid rgba(255,255,255,.1);margin-top:4px;padding-top:6px">
+      <span style="color:#9ab8a8">Comissão base</span><span>${fmt(totalComissao)}</span>
+    </div>
+    <div class="cd-row">
+      <span style="color:#ffd54f">Total bônus</span><span style="color:#ffd54f">+ ${fmt(totalBonus)}</span>
+    </div>`;
+  }
+
+  document.getElementById('r-detail').innerHTML = detailHTML;
+  const totalGeral = totalComissao + totalBonus;
+
+  // Nível
+  let nivel, nivelClass, nivelNext, nivelMin;
+  if (totalPontos > 300)      { nivel='💎 Diamond'; nivelClass='diamond'; nivelNext=null;  nivelMin=300; }
+  else if (totalPontos>=121)  { nivel='🥇 Gold';    nivelClass='gold';    nivelNext=300;   nivelMin=121; }
+  else if (totalPontos>=41)   { nivel='🥈 Silver';  nivelClass='silver';  nivelNext=121;   nivelMin=41;  }
+  else                        { nivel='🥉 Bronze';  nivelClass='bronze';  nivelNext=41;    nivelMin=0;   }
+
+  document.getElementById('r-planos').textContent = totalPlanos + ' plano' + (totalPlanos!==1?'s':'');
+  document.getElementById('r-pontos').textContent = totalPontos + ' pts';
+  document.getElementById('r-nivel').innerHTML = `<span class="nivel-badge ${nivelClass}">${nivel}</span>`;
+  document.getElementById('r-comissao').textContent = 'R$ ' + totalGeral.toFixed(2).replace('.',',');
+
+  // Meta progress
+  if (nivelNext) {
+    const intervalo = nivelNext - nivelMin;
+    const feito = totalPontos - nivelMin;
+    const pct = Math.min(100, Math.round((feito/intervalo)*100));
+    const faltam = nivelNext - totalPontos;
+    const prox = nivelNext===41?'🥈 Silver':nivelNext===121?'🥇 Gold':'💎 Diamond';
+    const cor = nivelClass==='bronze'?'#cd8b5a':nivelClass==='silver'?'#90a4ae':nivelClass==='gold'?'#ffd54f':'#82b1ff';
+    document.getElementById('r-meta-lbl').textContent = 'Para ' + prox + ' (' + faltam + ' pts restantes)';
+    document.getElementById('r-meta-pct').textContent = pct + '%';
+    document.getElementById('r-meta-fill').style.width = pct + '%';
+    document.getElementById('r-meta-fill').style.background = cor;
+  } else {
+    document.getElementById('r-meta-lbl').textContent = '💎 Nível máximo!';
+    document.getElementById('r-meta-pct').textContent = '100%';
+    document.getElementById('r-meta-fill').style.width = '100%';
+    document.getElementById('r-meta-fill').style.background = '#82b1ff';
+  }
+}
+
+window.adj = function(tipo, delta) {
+  const inp = document.getElementById('inp-' + tipo);
+  inp.value = Math.max(0, (parseInt(inp.value)||0) + delta);
+  calcular();
+};
+
+// ══ MÓDULOS ══
+window.toggleMod = function(n) {
+  const body  = document.getElementById('mb-'+n);
+  const arrow = document.getElementById('ma-'+n);
+  const open  = body.classList.contains('open');
+  [1,2,3,4,5].forEach(i => {
+    document.getElementById('mb-'+i).classList.remove('open');
+    document.getElementById('ma-'+i).classList.remove('open');
+  });
+  if (!open) { body.classList.add('open'); arrow.classList.add('open'); }
+};
+
+window.toggleLicao = function(id) {
+  const p = document.getElementById('lp-'+id);
+  const open = p.classList.contains('open');
+  document.querySelectorAll('.l-panel').forEach(x => x.classList.remove('open'));
+  if (!open) p.classList.add('open');
+};
+
+window.toggleCI = function(el) { el.classList.toggle('checked'); };
+
+// ══ CONCLUIR ══
+window.concluir = function(id) {
+  state[id] = 'done';
+  localStorage.setItem(KEY, JSON.stringify(state));
+  const chk = document.getElementById('lc-'+id);
+  const btn = document.getElementById('bd-'+id);
+  if (chk) chk.classList.add('done');
+  if (btn) { btn.classList.add('done-state'); btn.textContent = '✅ Concluído'; btn.onclick = null; }
+  document.getElementById('lp-'+id).classList.remove('open');
+  updateProg();
+  toast('✅ Lição concluída!');
+  // Atualiza num módulo
+  const mod = id.split('-')[0];
+  const nums = { '1':['1-1','1-2'], '2':['2-1','2-2','2-3'], '3':['3-1','3-2'], '4':['4-1'], '5':['5-1'] };
+  const allDone = (nums[mod]||[]).every(l => state[l]==='done');
+  const nm = document.getElementById('mn-'+mod);
+  if (nm) { nm.classList.remove('p','a'); nm.classList.add(allDone?'c':'a'); }
+  // Certificado
+  if (Object.values(state).filter(v=>v==='done').length >= TOTAL) {
+    setTimeout(() => {
+      document.getElementById('cert').classList.add('show');
+      document.getElementById('cert').scrollIntoView({behavior:'smooth'});
+    }, 500);
+  }
+};
+
+function updateProg() {
+  const done = Object.values(state).filter(v=>v==='done').length;
+  const pct = Math.round((done/TOTAL)*100);
+  document.getElementById('progGeral').style.width = pct+'%';
+  document.getElementById('pctLabel').textContent = pct+'%';
+}
+
+// ══ INIT ══
+function init() {
+  Object.keys(state).forEach(id => {
+    if (state[id]==='done') {
+      const chk = document.getElementById('lc-'+id);
+      const btn = document.getElementById('bd-'+id);
+      if (chk) chk.classList.add('done');
+      if (btn) { btn.classList.add('done-state'); btn.textContent = '✅ Concluído'; btn.onclick = null; }
+    }
+  });
+  // Atualiza nums
+  const nums = { '1':['1-1','1-2'], '2':['2-1','2-2','2-3'], '3':['3-1','3-2'], '4':['4-1'], '5':['5-1'] };
+  Object.keys(nums).forEach(mod => {
+    const allDone = nums[mod].every(l => state[l]==='done');
+    const anyDone = nums[mod].some(l => state[l]==='done');
+    const nm = document.getElementById('mn-'+mod);
+    if (nm) { nm.classList.remove('p','a','c'); nm.classList.add(allDone?'c':anyDone?'a':'p'); }
+  });
+  if (Object.values(state).filter(v=>v==='done').length >= TOTAL) {
+    document.getElementById('cert').classList.add('show');
+  }
+  updateProg();
+  calcular();
+  toggleMod(1);
+}
+
+window.compartilhar = function() {
+  const txt = '⭐ Concluí o treinamento avançado "Como Bater Metas" da ConsultMee! Estou pronto para o Diamond! 💎 #ConsultMee';
+  if (navigator.share) navigator.share({text:txt});
+  else { navigator.clipboard?.writeText(txt); toast('📋 Texto copiado!'); }
+};
+
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+init();
+</script>
+</body>
+</html>
